@@ -1,12 +1,13 @@
 import { StyleSheet, Text } from "react-native";
 import React from "react";
 import PageContainer from "../components/PageContainer";
-import { SafeAreaView } from "react-native-safe-area-context";
+import Input from "../components/Input";
+import { FontAwesome } from "@expo/vector-icons";
 
 const AuthScreen = () => {
   return (
     <PageContainer>
-      <Text>AuthScreen</Text>
+      <Input label="First Name" icon="user" iconPack={FontAwesome} />
     </PageContainer>
   );
 };
