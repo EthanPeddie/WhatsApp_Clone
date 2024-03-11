@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   ImageBackground,
@@ -14,6 +14,8 @@ import BackgroundImage from "../assets/images/droplet.jpeg";
 import colors from "../constants/colors";
 
 const ChatScreen = () => {
+  const [messageText, setMessageText] = useState("");
+  console.log(messageText);
   return (
     <SafeAreaView edges={["left", "right", "bottom"]} style={styles.container}>
       <ImageBackground
@@ -27,13 +29,26 @@ const ChatScreen = () => {
         >
           <Feather name="plus-circle" size={24} color={colors.blue} />
         </TouchableOpacity>
-        <TextInput style={styles.textBox} />
-        <TouchableOpacity
-          onPress={() => console.log("Press")}
-          style={styles.mediaButton}
-        >
-          <Feather name="camera" size={24} color={colors.blue} />
-        </TouchableOpacity>
+        <TextInput
+          style={styles.textBox}
+          onChangeText={(text) => setMessageText(text)}
+        />
+        {messageText === "" && (
+          <TouchableOpacity
+            onPress={() => console.log("Press")}
+            style={styles.mediaButton}
+          >
+            <Feather name="camera" size={24} color={colors.blue} />
+          </TouchableOpacity>
+        )}
+        {messageText != "" && (
+          <TouchableOpacity
+            onPress={() => console.log("Press")}
+            style={styles.mediaButton}
+          >
+            <Feather name="send" size={24} color={colors.blue} />
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
