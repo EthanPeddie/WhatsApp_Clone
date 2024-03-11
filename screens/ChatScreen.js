@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from "react";
 import {
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -11,6 +13,7 @@ import { Feather } from "@expo/vector-icons";
 
 import BackgroundImage from "../assets/images/droplet.jpeg";
 import colors from "../constants/colors";
+import { useNavigationBuilder } from "@react-navigation/native";
 
 const ChatScreen = () => {
   const [messageText, setMessageText] = useState("");
@@ -21,37 +24,43 @@ const ChatScreen = () => {
   }, [messageText]);
   return (
     <SafeAreaView edges={["left", "right", "bottom"]} style={styles.container}>
-      <ImageBackground
-        source={BackgroundImage}
-        style={styles.image}
-      ></ImageBackground>
-      <View style={styles.inputContainer}>
-        <TouchableOpacity
-          onPress={() => console.log("Press")}
-          style={styles.mediaButton}
-        >
-          <Feather name="plus-circle" size={24} color={colors.blue} />
-        </TouchableOpacity>
-        <TextInput
-          style={styles.textBox}
-          value={messageText}
-          onChangeText={(text) => setMessageText(text)}
-          onSubmitEditing={sendMessage}
-        />
-        {messageText === "" && (
+      <KeyboardAvoidingView
+        style={styles.screen}
+        behavior={Platform.OS == "ios" ? "padding" : useNavigationBuilder}
+        keyboardVerticalOffset={100}
+      >
+        <ImageBackground
+          source={BackgroundImage}
+          style={styles.image}
+        ></ImageBackground>
+        <View style={styles.inputContainer}>
           <TouchableOpacity
             onPress={() => console.log("Press")}
             style={styles.mediaButton}
           >
-            <Feather name="camera" size={24} color={colors.blue} />
+            <Feather name="plus-circle" size={24} color={colors.blue} />
           </TouchableOpacity>
-        )}
-        {messageText !== "" && (
-          <TouchableOpacity onPress={sendMessage} style={styles.mediaButton}>
-            <Feather name="send" size={24} color={colors.blue} />
-          </TouchableOpacity>
-        )}
-      </View>
+          <TextInput
+            style={styles.textBox}
+            value={messageText}
+            onChangeText={(text) => setMessageText(text)}
+            onSubmitEditing={sendMessage}
+          />
+          {messageText === "" && (
+            <TouchableOpacity
+              onPress={() => console.log("Press")}
+              style={styles.mediaButton}
+            >
+              <Feather name="camera" size={24} color={colors.blue} />
+            </TouchableOpacity>
+          )}
+          {messageText !== "" && (
+            <TouchableOpacity onPress={sendMessage} style={styles.mediaButton}>
+              <Feather name="send" size={24} color={colors.blue} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -59,6 +68,9 @@ const ChatScreen = () => {
 export default ChatScreen;
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   image: {
     flex: 1,
   },
