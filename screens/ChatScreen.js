@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
-  Button,
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
@@ -15,7 +14,11 @@ import colors from "../constants/colors";
 
 const ChatScreen = () => {
   const [messageText, setMessageText] = useState("");
-  console.log(messageText);
+
+  const sendMessage = useCallback(() => {
+    console.log("Sending message:", messageText);
+    setMessageText("");
+  }, [messageText]);
   return (
     <SafeAreaView edges={["left", "right", "bottom"]} style={styles.container}>
       <ImageBackground
@@ -31,7 +34,9 @@ const ChatScreen = () => {
         </TouchableOpacity>
         <TextInput
           style={styles.textBox}
+          value={messageText}
           onChangeText={(text) => setMessageText(text)}
+          onSubmitEditing={sendMessage}
         />
         {messageText === "" && (
           <TouchableOpacity
@@ -41,11 +46,8 @@ const ChatScreen = () => {
             <Feather name="camera" size={24} color={colors.blue} />
           </TouchableOpacity>
         )}
-        {messageText != "" && (
-          <TouchableOpacity
-            onPress={() => console.log("Press")}
-            style={styles.mediaButton}
-          >
+        {messageText !== "" && (
+          <TouchableOpacity onPress={sendMessage} style={styles.mediaButton}>
             <Feather name="send" size={24} color={colors.blue} />
           </TouchableOpacity>
         )}
