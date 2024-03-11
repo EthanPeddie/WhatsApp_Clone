@@ -21,11 +21,17 @@ const ChatScreen = () => {
         style={styles.image}
       ></ImageBackground>
       <View style={styles.inputContainer}>
-        <TouchableOpacity onPress={() => console.log("Press")}>
+        <TouchableOpacity
+          onPress={() => console.log("Press")}
+          style={styles.mediaButton}
+        >
           <Feather name="plus-circle" size={24} color={colors.blue} />
         </TouchableOpacity>
-        <TextInput />
-        <TouchableOpacity onPress={() => console.log("Press")}>
+        <TextInput style={styles.textBox} />
+        <TouchableOpacity
+          onPress={() => console.log("Press")}
+          style={styles.mediaButton}
+        >
           <Feather name="camera" size={24} color={colors.blue} />
         </TouchableOpacity>
       </View>
@@ -44,5 +50,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingVertical: 8,
     paddingHorizontal: 10,
+  },
+  textBox: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: colors.lightGray,
+    marginHorizontal: 15,
+    paddingHorizontal: 12,
+  },
+  mediaButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 35,
   },
 });
