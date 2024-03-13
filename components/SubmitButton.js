@@ -1,15 +1,20 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import colors from "../constants/colors";
 
-const SubmitButton = ({ disable }) => {
+const SubmitButton = ({ disable, title, onPress }) => {
   const enabledBgColor = colors.primary;
   const disabledBgColor = colors.lightGray;
   const bgColor = disable ? disabledBgColor : enabledBgColor;
   return (
-    <TouchableOpacity style={{ ...styles.button, backgroundColor: bgColor }}>
-      <Text style={{ color: disable ? colors.gray : "white" }}>Submit</Text>
+    <TouchableOpacity
+      onPress={disable ? () => {} : onPress}
+      style={{ ...styles.button, ...{ backgroundColor: bgColor } }}
+    >
+      <Text style={[styles.text, { color: disable ? colors.gray : "white" }]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -23,6 +28,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 30,
-    marginVertical: 8,
+    marginTop: 20,
+  },
+  text: {
+    fontFamily: "bold",
+    fontSize: 15,
   },
 });

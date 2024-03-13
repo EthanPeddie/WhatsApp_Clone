@@ -17,7 +17,11 @@ const AuthScreen = () => {
       <Input label="Last Name" icon="user-o" iconPack={FontAwesome} />
       <Input label="Email" icon="mail" iconPack={Feather} />
       <Input label="Password" icon="lock" iconPack={Feather} />
-      <SubmitButton disable={false} />
+      <SubmitButton
+        disable={false}
+        title="Submit"
+        onPress={() => console.log("Click Click")}
+      />
     </PageContainer>
   );
 };
