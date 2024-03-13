@@ -1,31 +1,40 @@
 import { StyleSheet, Text } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { TouchableOpacity } from "react-native";
+
 import PageContainer from "../components/PageContainer";
-import Input from "../components/Input";
-import { FontAwesome, Feather } from "@expo/vector-icons";
-import SubmitButton from "../components/SubmitButton";
+import SignUpForm from "../components/SignUpForm";
+import SignInForm from "../components/SignInForm";
+import colors from "../constants/colors";
 
 const AuthScreen = () => {
+  const [isSignUp, setSignUp] = useState(false);
   return (
     <PageContainer>
-      <Input
-        label="First Name"
-        icon="user-o"
-        iconPack={FontAwesome}
-        errorMessage="required"
-      />
-      <Input label="Last Name" icon="user-o" iconPack={FontAwesome} />
-      <Input label="Email" icon="mail" iconPack={Feather} />
-      <Input label="Password" icon="lock" iconPack={Feather} />
-      <SubmitButton
-        disable={false}
-        title="Submit"
-        onPress={() => console.log("Click Click")}
-      />
+      {isSignUp ? <SignUpForm /> : <SignInForm />}
+      <TouchableOpacity
+        style={styles.linkContainer}
+        onPress={() => setSignUp((prevState) => !prevState)}
+      >
+        <Text style={styles.linkText}>{`Switch to ${
+          isSignUp ? "Sign In" : "Sign Up"
+        }`}</Text>
+      </TouchableOpacity>
     </PageContainer>
   );
 };
 
 export default AuthScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  linkContainer: {
+    marginVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  linkText: {
+    color: colors.blue,
+    fontFamily: "medium",
+    letterSpacing: 0.4,
+  },
+});

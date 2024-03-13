@@ -33,5 +33,6 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "bold",
     fontSize: 15,
+    letterSpacing: 0.4,
   },
 });
