@@ -7,7 +7,15 @@ import { FontAwesome } from "@expo/vector-icons";
 const AuthScreen = () => {
   return (
     <PageContainer>
-      <Input label="First Name" icon="user" iconPack={FontAwesome} />
+      <Input
+        label="First Name"
+        icon="user"
+        iconPack={FontAwesome}
+        errorMessage="required"
+      />
+      <Input label="Last Name" icon="user" iconPack={FontAwesome} />
+      <Input label="Email" icon="user" iconPack={FontAwesome} />
+      <Input label="Password" icon="user" iconPack={FontAwesome} />
     </PageContainer>
   );
 };

@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 import colors from "../constants/colors";
 
-const Input = ({ label, icon, size, iconPack: IconPack }) => {
+const Input = ({ label, icon, size, iconPack: IconPack, errorMessage }) => {
   return (
     <View>
       <Text style={styles.label}>{label}</Text>
@@ -10,6 +10,11 @@ const Input = ({ label, icon, size, iconPack: IconPack }) => {
         {icon && <IconPack name={icon} size={size || 20} style={styles.icon} />}
         <TextInput />
       </View>
+      {errorMessage && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -32,5 +37,12 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     fontFamily: "bold",
     letterSpacing: 0.4,
+  },
+  errorContainer: {
+    marginVertical: 6,
+  },
+  errorMessage: {
+    color: "red",
+    fontFamily: "regular",
   },
 });
