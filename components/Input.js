@@ -10,6 +10,7 @@ const Input = ({
   errorMessage,
   inputChangeText,
   id,
+  ...others
 }) => {
   const onChangeText = (text) => {
     inputChangeText(id, text);
@@ -19,7 +20,7 @@ const Input = ({
       <Text style={styles.label}>{label}</Text>
       <View style={styles.inputConatiner}>
         {icon && <IconPack name={icon} size={size || 20} style={styles.icon} />}
-        <TextInput onChangeText={onChangeText} />
+        <TextInput onChangeText={onChangeText} {...others} />
       </View>
       {errorMessage && (
         <View style={styles.errorContainer}>
