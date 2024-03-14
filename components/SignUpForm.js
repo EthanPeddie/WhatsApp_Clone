@@ -5,11 +5,21 @@ import { FontAwesome, Feather } from "@expo/vector-icons";
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
 import Logo from "../assets/images/logo.png";
+import {
+  validateString,
+  validateEmail,
+  validatePassword,
+} from "../utils/validation";
 
 const SignUpForm = () => {
   const inputHandleChange = (inputId, inputValue) => {
-    console.log("id: " + inputId);
-    console.log("value: " + inputValue);
+    if (inputId == "first name" || inputId == "last name") {
+      console.log(validateString(inputId, inputValue));
+    } else if (inputId == "email") {
+      console.log(validateEmail(inputId, inputValue));
+    } else if (inputId == "password") {
+      console.log(validatePassword(inputId, inputValue));
+    }
   };
   return (
     <>
