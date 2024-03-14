@@ -1,6 +1,11 @@
 import { StyleSheet, Text } from "react-native";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import {
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 
 import PageContainer from "../components/PageContainer";
 import SignUpForm from "../components/SignUpForm";
@@ -11,15 +16,22 @@ const AuthScreen = () => {
   const [isSignUp, setSignUp] = useState(false);
   return (
     <PageContainer>
-      {isSignUp ? <SignUpForm /> : <SignInForm />}
-      <TouchableOpacity
-        style={styles.linkContainer}
-        onPress={() => setSignUp((prevState) => !prevState)}
-      >
-        <Text style={styles.linkText}>{`Switch to ${
-          isSignUp ? "Sign In" : "Sign Up"
-        }`}</Text>
-      </TouchableOpacity>
+      <ScrollView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "height" : undefined}
+          keyboardVerticalOffset={100}
+        >
+          {isSignUp ? <SignUpForm /> : <SignInForm />}
+          <TouchableOpacity
+            style={styles.linkContainer}
+            onPress={() => setSignUp((prevState) => !prevState)}
+          >
+            <Text style={styles.linkText}>{`Switch to ${
+              isSignUp ? "Sign In" : "Sign Up"
+            }`}</Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </ScrollView>
     </PageContainer>
   );
 };
