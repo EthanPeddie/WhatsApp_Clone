@@ -7,20 +7,44 @@ import SubmitButton from "./SubmitButton";
 import Logo from "../assets/images/logo.png";
 
 const SignUpForm = () => {
+  const inputHandleChange = (inputId, inputValue) => {
+    console.log("id: " + inputId);
+    console.log("value: " + inputValue);
+  };
   return (
     <>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={Logo} resizeMode="contain" />
       </View>
       <Input
+        id="first name"
         label="First Name"
         icon="user-o"
         iconPack={FontAwesome}
         errorMessage="required"
+        inputChangeText={inputHandleChange}
       />
-      <Input label="Last Name" icon="user-o" iconPack={FontAwesome} />
-      <Input label="Email" icon="mail" iconPack={Feather} />
-      <Input label="Password" icon="lock" iconPack={Feather} />
+      <Input
+        id="last name"
+        label="Last Name"
+        icon="user-o"
+        iconPack={FontAwesome}
+        inputChangeText={inputHandleChange}
+      />
+      <Input
+        id="email"
+        label="Email"
+        icon="mail"
+        iconPack={Feather}
+        inputChangeText={inputHandleChange}
+      />
+      <Input
+        id="password"
+        label="Password"
+        icon="lock"
+        iconPack={Feather}
+        inputChangeText={inputHandleChange}
+      />
       <SubmitButton
         disable={false}
         title="Sign Up"
