@@ -1,5 +1,5 @@
 import { Image, StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useReducer } from "react";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 
 import Input from "./Input";
@@ -7,9 +7,29 @@ import SubmitButton from "./SubmitButton";
 import Logo from "../assets/images/logo.png";
 import validateInput from "../utils/actions/FormAction";
 
+const reducer = (state, action) => {
+  const validationResult = action;
+  return {
+    ...state,
+    formIsValid: validationResult == undefined,
+  };
+};
+
+const initialState = {
+  inputKey: {
+    firstName: false,
+    lastName: false,
+    email: false,
+    password: false,
+  },
+  formIsValid: false,
+};
 const SignUpForm = () => {
+  const [formData, dispatch] = useReducer(reducer, initialState);
+
   const inputHandleChange = (inputId, inputValue) => {
-    console.log(validateInput(inputId, inputValue));
+    const res = validateInput(inputId, inputValue);
+    dispatch(res);
   };
   return (
     <>
@@ -17,7 +37,7 @@ const SignUpForm = () => {
         <Image style={styles.image} source={Logo} resizeMode="contain" />
       </View>
       <Input
-        id="first name"
+        id="firstName"
         label="First Name"
         icon="user-o"
         iconPack={FontAwesome}
@@ -27,7 +47,7 @@ const SignUpForm = () => {
         placeholder="First Name"
       />
       <Input
-        id="last name"
+        id="lastName"
         label="Last Name"
         icon="user-o"
         iconPack={FontAwesome}
@@ -56,7 +76,7 @@ const SignUpForm = () => {
         placeholder="Password"
       />
       <SubmitButton
-        disable={false}
+        disable={!formData.formIsValid}
         title="Sign Up"
         onPress={() => console.log("Sign Up")}
       />
