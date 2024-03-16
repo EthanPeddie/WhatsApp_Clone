@@ -8,39 +8,17 @@ import {
 import React, { useEffect, useState } from "react";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { Formik } from "formik";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { child, getDatabase, ref, set } from "firebase/database";
-import * as Yup from "yup";
 
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
 import Logo from "../assets/images/logo.png";
-import app from "../utils/firebaseHelper";
 import colors from "../constants/colors";
+import { SignupSchema } from "../utils/validation";
+import { SignUp } from "../utils/actions/AuthAction";
 
 const SignUpForm = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const SignupSchema = Yup.object().shape({
-    firstName: Yup.string()
-
-      .min(2, "Too Short!")
-
-      .max(50, "Too Long!")
-
-      .required("Required"),
-
-    lastName: Yup.string()
-
-      .min(2, "Too Short!")
-
-      .max(50, "Too Long!")
-
-      .required("Required"),
-
-    email: Yup.string().email("Invalid email").required(),
-    password: Yup.string().min(6, "Too Short!").max(50, "Too Long!").required(),
-  });
 
   useEffect(() => {
     if (error) {
@@ -48,33 +26,11 @@ const SignUpForm = () => {
     }
   }, [error]);
 
-  const createUser = async (firstName, lastName, email, userId) => {
-    const name = `${firstName} ${lastName}`.toLowerCase();
-    const userData = {
-      firstName,
-      lastName,
-      name,
-      email,
-      userId,
-      signUpDate: new Date().toISOString(),
-    };
-    const dbRef = ref(getDatabase());
-    const childRef = child(dbRef, `users/${userId}`);
-    await set(childRef, userData);
-    return userData;
-  };
-
   const handleFormSubmit = async (values) => {
     setIsLoading(true);
-    const { firstName, lastName, email, password } = values;
-    const auth = getAuth(app);
     try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      const { uid } = res.user;
-      const data = await createUser(firstName, lastName, email, uid);
-      console.log(data);
+      await SignUp(values);
     } catch (error) {
-      console.log(error);
       if (error.code === "auth/email-already-in-use") {
         setError("The email address is already in use.");
       } else if (error.code === "auth/weak-password") {

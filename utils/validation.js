@@ -1,80 +1,22 @@
-import { validate } from "validate.js";
+import * as Yup from "yup";
 
-export const validateString = (id, value) => {
-  const constraints = {
-    presence: { allowEmpty: false },
-    format: {
-      pattern: "[a-z]+",
-      flags: "i",
-      message: "can only contain a-z ",
-    },
-  };
+export const SignupSchema = Yup.object().shape({
+  firstName: Yup.string()
 
-  //   if (value !== "") {
-  //     constraints.format = {
-  //       pattern: "[a-z]+",
-  //       flags: "i",
-  //       message: "can only contain a-z ",
-  //     };
-  //   }
+    .min(2, "Too Short!")
 
-  const validation = validate(
-    { [id]: value },
-    {
-      [id]: constraints,
-    }
-  );
+    .max(50, "Too Long!")
 
-  return validation;
-};
+    .required("Required"),
 
-export const validateEmail = (id, value) => {
-  const constraints = {
-    presence: {
-      allowEmpty: false,
-      email: {
-        email: true,
-      },
-    },
-  };
+  lastName: Yup.string()
 
-  //   if (value !== "") {
-  //     constraints.email = {
-  //       email: true,
-  //     };
-  //   }
-  const validation = validate(
-    { [id]: value },
-    {
-      [id]: constraints,
-    }
-  );
+    .min(2, "Too Short!")
 
-  return validation;
-};
+    .max(50, "Too Long!")
 
-export const validatePassword = (id, value) => {
-  const constraints = {
-    presence: {
-      allowEmpty: false,
-      length: {
-        minimum: 6,
-        message: "must be at least 6 characters",
-      },
-    },
-  };
+    .required("Required"),
 
-  //   if (value !== "") {
-  //     constraints.email = {
-  //       email: true,
-  //     };
-  //   }
-  const validation = validate(
-    { [id]: value },
-    {
-      [id]: constraints,
-    }
-  );
-
-  return validation;
-};
+  email: Yup.string().email("Invalid email").required(),
+  password: Yup.string().min(6, "Too Short!").max(50, "Too Long!").required(),
+});
