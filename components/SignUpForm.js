@@ -3,13 +3,13 @@ import {
   Alert,
   Image,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { Formik } from "formik";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { child, getDatabase, ref, set } from "firebase/database";
 import * as Yup from "yup";
 
 import Input from "./Input";
@@ -48,14 +48,33 @@ const SignUpForm = () => {
     }
   }, [error]);
 
+  const createUser = async (firstName, lastName, email, userId) => {
+    const name = `${firstName} ${lastName}`.toLowerCase();
+    const userData = {
+      firstName,
+      lastName,
+      name,
+      email,
+      userId,
+      signUpDate: new Date().toISOString(),
+    };
+    const dbRef = ref(getDatabase());
+    const childRef = child(dbRef, `users/${userId}`);
+    await set(childRef, userData);
+    return userData;
+  };
+
   const handleFormSubmit = async (values) => {
     setIsLoading(true);
     const { firstName, lastName, email, password } = values;
     const auth = getAuth(app);
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(res);
+      const { uid } = res.user;
+      const data = await createUser(firstName, lastName, email, uid);
+      console.log(data);
     } catch (error) {
+      console.log(error);
       if (error.code === "auth/email-already-in-use") {
         setError("The email address is already in use.");
       } else if (error.code === "auth/weak-password") {
