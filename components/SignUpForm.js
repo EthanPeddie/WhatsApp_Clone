@@ -8,6 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { Formik } from "formik";
+import { useDispatch } from "react-redux";
 
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
@@ -17,6 +18,7 @@ import { SignupSchema } from "../utils/validation";
 import { SignUp } from "../utils/actions/AuthAction";
 
 const SignUpForm = () => {
+  const dispatch = useDispatch();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,7 +31,7 @@ const SignUpForm = () => {
   const handleFormSubmit = async (values) => {
     setIsLoading(true);
     try {
-      await SignUp(values);
+      dispatch(SignUp(values));
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         setError("The email address is already in use.");

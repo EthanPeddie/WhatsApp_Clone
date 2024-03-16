@@ -5,6 +5,8 @@ import "react-native-gesture-handler";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import AppNavigator from "./navigations/AppNavigator";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,9 +51,11 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider onLayout={onLayout} style={styles.container}>
-      <AppNavigator />
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider onLayout={onLayout} style={styles.container}>
+        <AppNavigator />
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 

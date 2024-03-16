@@ -2,6 +2,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { child, getDatabase, ref, set } from "firebase/database";
 
 import app from "../firebaseHelper";
+import { authenticate } from "../../store/authSlice";
 
 const createUser = async (firstName, lastName, email, userId) => {
   const name = `${firstName} ${lastName}`.toLowerCase();
@@ -19,14 +20,15 @@ const createUser = async (firstName, lastName, email, userId) => {
   return userData;
 };
 
-export const SignUp = async (values) => {
+export const SignUp = (values) => async (dispatch) => {
   const { firstName, lastName, email, password } = values;
   const auth = getAuth(app);
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
-    const { uid } = res.user;
+    const { uid, stsTokenManager } = res.user;
+    const { accessToken } = stsTokenManager;
     const data = await createUser(firstName, lastName, email, uid);
-    console.log(data);
+    dispatch(authenticate({ token: accessToken, userData: data }));
   } catch (error) {
     if (error.code === "auth/email-already-in-use") {
       setError("The email address is already in use.");
