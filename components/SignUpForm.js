@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { Formik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
@@ -19,6 +19,8 @@ import { SignUp } from "../utils/actions/AuthAction";
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth);
+  console.log(userData);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
