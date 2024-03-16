@@ -1,5 +1,5 @@
-import { Image, StyleSheet, View } from "react-native";
-import React from "react";
+import { Alert, Image, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { Formik } from "formik";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
@@ -11,6 +11,8 @@ import Logo from "../assets/images/logo.png";
 import app from "../utils/firebaseHelper";
 
 const SignUpForm = () => {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
   const SignupSchema = Yup.object().shape({
     firstName: Yup.string()
 
@@ -32,6 +34,12 @@ const SignUpForm = () => {
     password: Yup.string().min(6, "Too Short!").max(50, "Too Long!").required(),
   });
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occurred", error);
+    }
+  }, [error]);
+
   const handleFormSubmit = async (values) => {
     const { firstName, lastName, email, password } = values;
     const auth = getAuth(app);
@@ -39,7 +47,13 @@ const SignUpForm = () => {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       console.log(res);
     } catch (error) {
-      console.log(error);
+      if (error.code === "auth/email-already-in-use") {
+        setError("The email address is already in use.");
+      } else if (error.code === "auth/weak-password") {
+        setError("The password is too weak.");
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
     }
   };
 
