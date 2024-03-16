@@ -1,4 +1,11 @@
-import { Alert, Image, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { Formik } from "formik";
@@ -9,10 +16,11 @@ import Input from "./Input";
 import SubmitButton from "./SubmitButton";
 import Logo from "../assets/images/logo.png";
 import app from "../utils/firebaseHelper";
+import colors from "../constants/colors";
 
 const SignUpForm = () => {
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const SignupSchema = Yup.object().shape({
     firstName: Yup.string()
 
@@ -41,6 +49,7 @@ const SignUpForm = () => {
   }, [error]);
 
   const handleFormSubmit = async (values) => {
+    setIsLoading(true);
     const { firstName, lastName, email, password } = values;
     const auth = getAuth(app);
     try {
@@ -54,6 +63,7 @@ const SignUpForm = () => {
       } else {
         setError("An error occurred. Please try again later.");
       }
+      setIsLoading(false);
     }
   };
 
@@ -128,11 +138,19 @@ const SignUpForm = () => {
               errorMessage={touched.password && errors.password}
             />
 
-            <SubmitButton
-              // disable={!formData.formIsValid}
-              title="Sign Up"
-              onPress={handleSubmit}
-            />
+            {isLoading ? (
+              <ActivityIndicator
+                size={"large"}
+                color={colors.blue}
+                style={{ marginTop: 15 }}
+              />
+            ) : (
+              <SubmitButton
+                // disable={!formData.formIsValid}
+                title="Sign Up"
+                onPress={handleSubmit}
+              />
+            )}
           </View>
         )}
       </Formik>
