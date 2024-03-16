@@ -1,85 +1,127 @@
 import { Image, StyleSheet, View } from "react-native";
-import React, { useReducer } from "react";
+import React from "react";
 import { FontAwesome, Feather } from "@expo/vector-icons";
+import { Formik } from "formik";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import * as Yup from "yup";
 
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
 import Logo from "../assets/images/logo.png";
-import validateInput from "../utils/actions/FormAction";
+import app from "../utils/firebaseHelper";
 
-const reducer = (state, action) => {
-  const validationResult = action;
-  return {
-    ...state,
-    formIsValid: validationResult == undefined,
-  };
-};
-
-const initialState = {
-  inputKey: {
-    firstName: false,
-    lastName: false,
-    email: false,
-    password: false,
-  },
-  formIsValid: false,
-};
 const SignUpForm = () => {
-  const [formData, dispatch] = useReducer(reducer, initialState);
+  const SignupSchema = Yup.object().shape({
+    firstName: Yup.string()
 
-  const inputHandleChange = (inputId, inputValue) => {
-    const res = validateInput(inputId, inputValue);
-    dispatch(res);
+      .min(2, "Too Short!")
+
+      .max(50, "Too Long!")
+
+      .required("Required"),
+
+    lastName: Yup.string()
+
+      .min(2, "Too Short!")
+
+      .max(50, "Too Long!")
+
+      .required("Required"),
+
+    email: Yup.string().email("Invalid email").required(),
+    password: Yup.string().min(6, "Too Short!").max(50, "Too Long!").required(),
+  });
+
+  const handleFormSubmit = async (values) => {
+    const { firstName, lastName, email, password } = values;
+    const auth = getAuth(app);
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
     <>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={Logo} resizeMode="contain" />
       </View>
-      <Input
-        id="firstName"
-        label="First Name"
-        icon="user-o"
-        iconPack={FontAwesome}
-        errorMessage="required"
-        inputChangeText={inputHandleChange}
-        autoCapitalize="none"
-        placeholder="First Name"
-      />
-      <Input
-        id="lastName"
-        label="Last Name"
-        icon="user-o"
-        iconPack={FontAwesome}
-        inputChangeText={inputHandleChange}
-        autoCapitalize="none"
-        placeholder="Last Name"
-      />
-      <Input
-        id="email"
-        label="Email"
-        icon="mail"
-        iconPack={Feather}
-        inputChangeText={inputHandleChange}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        placeholder="Email Address"
-      />
-      <Input
-        id="password"
-        label="Password"
-        icon="lock"
-        iconPack={Feather}
-        inputChangeText={inputHandleChange}
-        secureTextEntry
-        autoCapitalize="none"
-        placeholder="Password"
-      />
-      <SubmitButton
-        disable={!formData.formIsValid}
-        title="Sign Up"
-        onPress={() => console.log("Sign Up")}
-      />
+      <Formik
+        initialValues={{ firstName: "", lastName: "", email: "", password: "" }}
+        onSubmit={handleFormSubmit}
+        validationSchema={SignupSchema}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
+          <View>
+            <Input
+              id="firstName"
+              label="First Name"
+              onChangeText={handleChange("firstName")}
+              onBlur={handleBlur("firstName")}
+              value={values.firstName}
+              icon="user-o"
+              iconPack={FontAwesome}
+              autoCapitalize="none"
+              placeholder="First Name"
+              errorMessage={touched.firstName && errors.firstName}
+            />
+
+            <Input
+              id="lastName"
+              label="Last Name"
+              icon="user-o"
+              iconPack={FontAwesome}
+              onChangeText={handleChange("lastName")}
+              onBlur={handleBlur("lastName")}
+              value={values.lastName}
+              autoCapitalize="none"
+              placeholder="Last Name"
+              errorMessage={touched.lastName && errors.lastName}
+            />
+            <Input
+              id="email"
+              label="Email"
+              icon="mail"
+              iconPack={Feather}
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              placeholder="Email Address"
+              errorMessage={touched.email && errors.email}
+            />
+            <Input
+              id="password"
+              label="Password"
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+              icon="lock"
+              iconPack={Feather}
+              secureTextEntry
+              autoCapitalize="none"
+              placeholder="Password"
+              errorMessage={touched.password && errors.password}
+            />
+
+            <SubmitButton
+              // disable={!formData.formIsValid}
+              title="Sign Up"
+              onPress={handleSubmit}
+            />
+          </View>
+        )}
+      </Formik>
     </>
   );
 };

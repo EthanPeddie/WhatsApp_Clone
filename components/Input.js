@@ -12,15 +12,15 @@ const Input = ({
   id,
   ...others
 }) => {
-  const onChangeText = (text) => {
-    inputChangeText(id, text);
-  };
+  // const onChangeText = (text) => {
+  //   inputChangeText(id, text);
+  // };
   return (
     <View>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.inputConatiner}>
         {icon && <IconPack name={icon} size={size || 20} style={styles.icon} />}
-        <TextInput onChangeText={onChangeText} {...others} />
+        <TextInput {...others} />
       </View>
       {errorMessage && (
         <View style={styles.errorContainer}>
